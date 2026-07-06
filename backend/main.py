@@ -17,6 +17,9 @@ from renderer import render_video_local
 load_dotenv()
 
 FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
+# URL publique du backend lui-même (pour construire les liens vidéo).
+# En prod (HF Space) : https://<user>-albius-backend.hf.space
+PUBLIC_URL = os.getenv("PUBLIC_URL", "http://127.0.0.1:8000")
 
 
 @asynccontextmanager
@@ -193,7 +196,7 @@ async def generer_cours(payload: dict):
             "status": "success",
             "plan": {k: v for k, v in plan.items() if k != "composant_jsx"},
             "composant_jsx": plan["composant_jsx"],
-            "video_url": f"http://127.0.0.1:8000/outputs/final/{nom_fichier}"
+            "video_url": f"{PUBLIC_URL}/outputs/final/{nom_fichier}"
         })
 
     except Exception as e:

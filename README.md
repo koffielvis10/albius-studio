@@ -1,4 +1,16 @@
+---
+title: Albius Backend
+emoji: 🎬
+colorFrom: blue
+colorTo: purple
+sdk: docker
+app_port: 7860
+pinned: false
+---
+
 # Albius
+
+> L'en-tête YAML ci-dessus sert uniquement au déploiement du backend sur Hugging Face Spaces (SDK Docker). Il est sans effet sur GitHub.
 
 Albius transforme un enregistrement audio de cours (par ex. un cours de maths) en une vidéo pédagogique animée. L'audio est transcrit, un agent IA génère des composants vidéo (Remotion) et des animations mathématiques (Manim), puis la vidéo finale est rendue.
 
@@ -64,4 +76,14 @@ OPENAI_API_KEY=...
 FRONTEND_URL=http://localhost:5173
 ```
 
+> ⚠️ Ne committez jamais le fichier `.env` : il contient vos clés API et est ignoré par Git.
+
+## Déploiement
+
+| Partie | Hébergeur | Notes |
+| ------ | --------- | ----- |
+| `frontend/` | **Vercel** | Root Directory = `frontend`, framework Vite. Variable `VITE_API_URL` = URL du backend. |
+| `backend/` + `render-server/` | **Hugging Face Space** (SDK Docker) | Build via le `Dockerfile` à la racine (port 7860). Secrets à définir : `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `FRONTEND_URL`, `PUBLIC_URL`. |
+
+Le backend fait du rendu vidéo lourd (Manim + Remotion + ffmpeg, jobs longs) : il ne peut pas tourner en serverless (Vercel), d'où un Space Docker avec beaucoup de RAM.
 

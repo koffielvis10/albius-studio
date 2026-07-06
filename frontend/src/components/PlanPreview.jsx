@@ -1,5 +1,5 @@
 import { useState } from "react"
-import axios from "axios"
+import api from "../api"
 
 const C = {
   bg: "#12122a", surface: "#1e1e3a", surface2: "#2a2a4e",
@@ -61,7 +61,7 @@ export default function PlanPreview({
   function lancerGeneration() {
     onLoading("Claude génère les animations...")
 
-    axios.post("http://127.0.0.1:8000/generer", {
+    api.post("/generer", {
       transcription:   transcription,
       annotations:     [],
       niveau,

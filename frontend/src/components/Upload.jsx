@@ -1,5 +1,5 @@
 import { useState } from "react"
-import axios from "axios"
+import api from "../api"
 
 const NIVEAUX = ["6ème", "5ème", "4ème", "3ème", "Seconde", "Première", "Terminale"]
 const MATIERES = ["Mathématiques", "Physique-Chimie", "SVT", "Histoire-Géographie", "Français", "Anglais", "Philosophie"]
@@ -43,8 +43,8 @@ export default function Upload({ onPlanOk, onErreur }) {
     try {
       // ── Étape 1 : Transcription Whisper ──
       setEtape("transcription")
-      const transRes = await axios.post(
-        "http://127.0.0.1:8000/transcrire",
+      const transRes = await api.post(
+        "/transcrire",
         formData,
         { headers: { "Content-Type": "multipart/form-data" }, timeout: 1800000 }
       )
@@ -55,8 +55,8 @@ export default function Upload({ onPlanOk, onErreur }) {
 
       // ── Étape 2 : Analyse du plan pédagogique ──
       setEtape("analyse")
-      const analyseRes = await axios.post(
-        "http://127.0.0.1:8000/analyser",
+      const analyseRes = await api.post(
+        "/analyser",
         {
           transcription: transcData.transcription,
           niveau:        transcData.niveau,

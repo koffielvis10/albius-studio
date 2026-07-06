@@ -2,11 +2,9 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 import numpy as np
 import subprocess
-import sys
 import os
 import tempfile
 
-MANIM_EXE = Path(sys.executable).parent / "manim.exe"
 FFMPEG_EXE = "ffmpeg"
 OUTPUT_DIR = Path("outputs/final")
 

@@ -5,7 +5,8 @@ from pathlib import Path
 import sys
 
 OUTPUT_DIR = Path("outputs/manim")
-MANIM_EXE = Path(sys.executable).parent / "manim.exe"
+# Invocation portable de Manim (Windows + Linux) : python -m manim
+MANIM_CMD = [sys.executable, "-m", "manim"]
 
 
 def render_manim(code: str, segment_id: str) -> str | None:
@@ -24,7 +25,7 @@ def render_manim(code: str, segment_id: str) -> str | None:
         print(f"    Rendu Manim segment {segment_id}...")
 
         result = subprocess.run([
-            str(MANIM_EXE),
+            *MANIM_CMD,
             tmp_path,
             'LessonAnimation',
             '--format', 'mp4',

@@ -1,0 +1,10 @@
+fastapi==0.136.3
+uvicorn[standard]==0.48.0
+python-multipart==0.0.29
+python-dotenv==1.2.2
+anthropic==0.105.2
+openai==2.38.0
+manim==0.20.1
+ManimPango==0.6.1
+pillow==12.2.0
+numpy==2.4.6

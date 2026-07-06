@@ -64,4 +64,4 @@ OPENAI_API_KEY=...
 FRONTEND_URL=http://localhost:5173
 ```
 
-> ⚠️ Ne committez jamais le fichier `.env` : il contient vos clés API et est ignoré par Git.
+

@@ -1,0 +1,43 @@
+# ===== Secrets =====
+.env
+*.env
+!.env.example
+
+# ===== Python (backend) =====
+venv/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# ===== Node =====
+node_modules/
+dist/
+dist-ssr/
+build/
+out/
+*.local
+
+# ===== Runtime / generated data (backend) =====
+backend/uploads/
+backend/outputs/
+backend/media/
+
+# ===== Logs =====
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ===== Editor / OS =====
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

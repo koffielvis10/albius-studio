@@ -32,7 +32,7 @@ Pour qu'une plateforme de cours existe, il faut des cours. Notre hypothèse : **
 ## Pourquoi le projet s'est arrêté
 
 - **Les profs n'étaient pas enthousiastes.** En leur présentant le projet, nous n'avons pas obtenu l'adhésion attendue : la production de vidéos n'était pas leur vrai problème.
-- **Les élèves nous ont montré que nous visions à côté.** En discutant avec eux, nous avons compris que le manque de profs n'était pas le problème à résoudre en premier. <!-- Préciser ici en une phrase ce que les élèves ont révélé -->
+- **Les élèves nous ont montré que nous visions à côté.** En discutant avec eux, nous avons compris que produire plus de contenus accessibles n'était pas pas la solution à leur problème. Ils ont surtout besoin d'un enseignant disponible, patient, qui encourage et qui a une pédagogie dans laquelle ils se reconnaissent.
 - **Nous avons donc arrêté Studio avant de l'intégrer**, plutôt que d'investir davantage dans une solution sans demande.
 
 ## Ce que j'en ai retenu

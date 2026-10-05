@@ -8,82 +8,79 @@ app_port: 7860
 pinned: false
 ---
 
-# Albius
+# Albius Studio
 
-> L'en-tête YAML ci-dessus sert uniquement au déploiement du backend sur Hugging Face Spaces (SDK Docker). Il est sans effet sur GitHub.
+> Transformer un cours enregistré à l'oral en vidéo pédagogique animée, pour aider les profs à produire du contenu en ligne.
+>
+> **Statut : projet arrêté.** Prototype fonctionnel, jamais intégré à la plateforme Albius. Le « pourquoi » est expliqué plus bas, et c'est la partie la plus intéressante du projet.
 
-Albius transforme un enregistrement audio de cours (par ex. un cours de maths) en une vidéo pédagogique animée. L'audio est transcrit, un agent IA génère des composants vidéo (Remotion) et des animations mathématiques (Manim), puis la vidéo finale est rendue.
+< Vidéo Demo : https://github.com/koffielvis10/albius-studio/issues/2 >
 
-## Architecture
+## Le contexte
 
-Le projet est un monorepo composé de trois parties :
+**Albius** était une plateforme de cours en ligne pour les collégiens et lycéens de Côte d'Ivoire, lancée avec un ami. Elle partait d'un constat : il manque de professeurs.
 
-| Dossier          | Rôle                                                                 | Stack                          |
-| ---------------- | -------------------------------------------------------------------- | ------------------------------ |
-| `backend/`       | API, transcription audio, agent IA, orchestration du rendu           | Python, FastAPI, Manim         |
-| `render-server/` | Composition et rendu des vidéos                                      | Remotion (TypeScript/React)    |
-| `frontend/`      | Interface utilisateur (upload audio, suivi, prévisualisation)        | React, Vite                    |
+Pour qu'une plateforme de cours existe, il faut des cours. Notre hypothèse : **le frein principal pour les profs est le temps et la compétence nécessaires pour produire des vidéos de qualité.** Albius Studio devait lever ce frein. Le prof enregistre son cours à l'oral (et/ou fournit sa fiche de cours), et l'outil génère une vidéo animée.
 
-## Prérequis
+## Ce que fait le prototype
 
-- Python 3.10+
-- Node.js 18+
-- Clés API : Anthropic et OpenAI
+1. Le prof dépose l'enregistrement audio de son cours (par exemple un cours de maths).
+2. L'audio est transcrit.
+3. Un agent IA génère les scènes vidéo (Remotion) et les animations mathématiques (Manim).
+4. La vidéo finale est rendue puis prévisualisée dans l'interface.
 
-## Installation
+## Pourquoi le projet s'est arrêté
 
-### Backend
+- **Les profs n'étaient pas enthousiastes.** En leur présentant le projet, nous n'avons pas obtenu l'adhésion attendue : la production de vidéos n'était pas leur vrai problème.
+- **Les élèves nous ont montré que nous visions à côté.** En discutant avec eux, nous avons compris que le manque de profs n'était pas le problème à résoudre en premier. <!-- Préciser ici en une phrase ce que les élèves ont révélé -->
+- **Nous avons donc arrêté Studio avant de l'intégrer**, plutôt que d'investir davantage dans une solution sans demande.
+
+## Ce que j'en ai retenu
+
+- **J'ai construit avant d'avoir validé le problème.** Ce prototype techniquement ambitieux (pipeline audio → vidéo, agent IA, double moteur de rendu) a été développé avant toute discussion structurée avec les utilisateurs. Quelques entretiens avec des profs et des élèves auraient suffi à changer de direction plus tôt.
+- **Sur une plateforme à deux faces, il faut valider les deux faces.** Nous avons misé sur l'offre (les profs) sans avoir vérifié ce dont la demande (les élèves) avait réellement besoin.
+- **Ces leçons ont donné [Philomath](#)**, le pivot qui a suivi : un tuteur IA socratique pour apprendre les maths en autonomie. Cette fois, j'ai commencé par interviewer 5 lycéens, puis rédigé un Opportunity Brief et un PRD, et seulement ensuite le code.
+
+---
+
+## Détails techniques
+
+### Architecture
+
+Monorepo en trois parties :
+
+| Dossier          | Rôle                                                          | Stack                       |
+| ---------------- | ------------------------------------------------------------- | --------------------------- |
+| `backend/`       | API, transcription audio, agent IA, orchestration du rendu    | Python, FastAPI, Manim      |
+| `render-server/` | Composition et rendu des vidéos                               | Remotion (TypeScript/React) |
+| `frontend/`      | Interface utilisateur (upload audio, suivi, prévisualisation) | React, Vite                 |
+
+**Choix d'hébergement :** le rendu vidéo est lourd (Manim, Remotion et ffmpeg, avec des jobs longs) et ne peut pas tourner en serverless. Le frontend est donc hébergé sur Vercel, et le backend ainsi que le render-server dans un Space Docker Hugging Face avec beaucoup de RAM.
+
+### Lancer le projet en local
+
+Prérequis : Python 3.10+, Node.js 18+, clés API Anthropic et OpenAI.
 
 ```bash
+# Backend
 cd backend
-python -m venv venv
-# Windows
-venv\Scripts\activate
-# macOS / Linux
-source venv/bin/activate
-pip install -r requirements.txt   # ou installer les dépendances utilisées
-cp .env.example .env              # puis renseigner vos clés API
-```
-
-Lancer l'API :
-
-```bash
+python -m venv venv && source venv/bin/activate   # Windows : venv\Scripts\activate
+pip install -r requirements.txt
+cp .env.example .env    # renseigner ANTHROPIC_API_KEY, OPENAI_API_KEY, FRONTEND_URL
 uvicorn main:app --reload
+
+# Render-server
+cd render-server && npm install
+
+# Frontend
+cd frontend && npm install && npm run dev
 ```
 
-### Render-server
+### Déploiement
 
-```bash
-cd render-server
-npm install
-```
+| Partie                        | Hébergeur                       | Notes                                                                                        |
+| ----------------------------- | ------------------------------- | -------------------------------------------------------------------------------------------- |
+| `frontend/`                   | Vercel                          | Root Directory = `frontend`, framework Vite. Variable `VITE_API_URL` = URL du backend.        |
+| `backend/` + `render-server/` | Hugging Face Space (SDK Docker) | `Dockerfile` à la racine (port 7860). Secrets : `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `FRONTEND_URL`, `PUBLIC_URL`. |
 
-### Frontend
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-## Configuration
-
-Créez un fichier `backend/.env` à partir de `backend/.env.example` :
-
-```
-ANTHROPIC_API_KEY=...
-OPENAI_API_KEY=...
-FRONTEND_URL=http://localhost:5173
-```
-
-> ⚠️ Ne committez jamais le fichier `.env` : il contient vos clés API et est ignoré par Git.
-
-## Déploiement
-
-| Partie | Hébergeur | Notes |
-| ------ | --------- | ----- |
-| `frontend/` | **Vercel** | Root Directory = `frontend`, framework Vite. Variable `VITE_API_URL` = URL du backend. |
-| `backend/` + `render-server/` | **Hugging Face Space** (SDK Docker) | Build via le `Dockerfile` à la racine (port 7860). Secrets à définir : `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `FRONTEND_URL`, `PUBLIC_URL`. |
-
-Le backend fait du rendu vidéo lourd (Manim + Remotion + ffmpeg, jobs longs) : il ne peut pas tourner en serverless (Vercel), d'où un Space Docker avec beaucoup de RAM.
-
+> L'en-tête YAML en haut de ce fichier sert uniquement au déploiement sur Hugging Face Spaces.

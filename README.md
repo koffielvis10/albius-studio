@@ -83,4 +83,4 @@ cd frontend && npm install && npm run dev
 | `frontend/`                   | Vercel                          | Root Directory = `frontend`, framework Vite. Variable `VITE_API_URL` = URL du backend.        |
 | `backend/` + `render-server/` | Hugging Face Space (SDK Docker) | `Dockerfile` à la racine (port 7860). Secrets : `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `FRONTEND_URL`, `PUBLIC_URL`. |
 
-> L'en-tête YAML en haut de ce fichier sert uniquement au déploiement sur Hugging Face Spaces.
+
